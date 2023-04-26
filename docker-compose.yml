@@ -1,0 +1,148 @@
+version: '3.8'
+services:
+
+  frontend:
+    image: react
+    networks:
+      - mysql
+    ports:
+      - "3000:3000"
+  
+  central-coordinator:
+    image: central-coordinator
+    networks:
+      - mysql
+    ports:
+      - "8080:8080"
+    depends_on:
+      - kafka
+    
+  
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    networks:
+      - mysql
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+    depends_on:
+      - zookeeper
+    
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    networks:
+      - mysql
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    
+
+  mysqldb:
+    image: mysql:8
+    networks:
+      - mysql
+    environment:
+      - MYSQL_TCP_PORT=3306
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=store
+      - MYSQL_PORT=3306  
+      - MYSQL_HOST=mysqldb
+    ports:
+      - "3306:3306"
+
+  mysqldb1:
+    image: mysql:8
+    networks:
+      - mysql
+    environment:
+      - MYSQL_TCP_PORT=3307
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=store
+      - MYSQL_PORT=3307  
+      - MYSQL_HOST=mysqldb1
+    ports:
+      - "3307:3307"
+    
+
+  mysqldb2:
+    image: mysql:8
+    networks:
+      - mysql
+    environment:
+      - MYSQL_TCP_PORT=3308 
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=store  
+      - MYSQL_PORT=3308
+      - MYSQL_HOST=mysqldb2
+    ports:
+      - "3308:3308"
+      
+      
+  mysqldb3:
+    image: mysql:8
+    networks:
+      - mysql
+    environment:
+      - MYSQL_TCP_PORT=3309 
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=store  
+      - MYSQL_PORT=3309
+      - MYSQL_HOST=mysqldb3
+    ports:
+      - "3309:3309"
+      
+      
+  replica:
+    image: replica
+    ports:
+      - "8081:8080"
+    networks:
+      - mysql
+    depends_on:
+      - mysqldb
+    environment:
+      - MYSQL_PORT=3306
+      - MYSQL_HOST=mysqldb
+      - REPLICA_ID=replica
+
+  replica1:
+    image: replica
+    ports:
+      - "8082:8080"
+    networks:
+      - mysql
+    depends_on:
+      - mysqldb1
+    environment:
+      - MYSQL_PORT=3307
+      - MYSQL_HOST=mysqldb1
+      - REPLICA_ID=replica1
+
+  replica2:
+    image: replica
+    ports:
+      - "8083:8080"
+    networks:
+      - mysql
+    depends_on:
+      - mysqldb2
+    environment:
+      - MYSQL_PORT=3308
+      - MYSQL_HOST=mysqldb2
+      - REPLICA_ID=replica2
+      
+  replica3:
+    image: replica
+    ports:
+      - "8084:8080"
+    networks:
+      - mysql
+    depends_on:
+      - mysqldb3
+    environment:
+      - MYSQL_PORT=3309
+      - MYSQL_HOST=mysqldb3
+      - REPLICA_ID=replica3
+
+networks:
+  mysql:
