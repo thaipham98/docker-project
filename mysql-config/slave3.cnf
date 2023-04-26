@@ -1,0 +1,4 @@
+[mysqld]
+server-id = 4
+relay-log = mysqldb3-relay-bin
+read-only = 1
