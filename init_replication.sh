@@ -1,15 +1,18 @@
 #!/bin/bash
 
-# Wait for master to start
 sleep 30
 
-# Configure replication on each slave
-for i in {1..3}; do
-  # Get the master's binary log coordinates
-  MASTER_STATUS=$(docker exec -it mysqldb mysql -uroot -proot -e "SHOW MASTER STATUS\G")
-  FILE=$(echo "$MASTER_STATUS" | grep File | awk '{print $2}')
-  POSITION=$(echo "$MASTER_STATUS" | grep Position | awk '{print $2}')
+# Create a dedicated replication user on the master
+docker exec -it docker-project-mysqldb-1 mysql -uroot -proot -e "CREATE USER 'replication'@'%' IDENTIFIED WITH mysql_native_password BY 'password';"
+docker exec -it docker-project-mysqldb-1 mysql -uroot -proot -e "GRANT REPLICATION SLAVE ON *.* TO 'replication'@'%';"
+docker exec -it docker-project-mysqldb-1 mysql -uroot -proot -e "FLUSH PRIVILEGES;"
 
-  # Set up the slave with the master's binary log coordinates
-  docker exec -it mysqldb$i mysql -uroot -proot -e "CHANGE MASTER TO MASTER_HOST='mysqldb', MASTER_USER='root', MASTER_PASSWORD='root', MASTER_LOG_FILE='$FILE', MASTER_LOG_POS=$POSITION; START SLAVE;"
+for i in {1..3}; do
+  MASTER_STATUS=$(docker exec -it docker-project-mysqldb-1 mysql -uroot -proot -e "SHOW MASTER STATUS\G")
+  FILE=$(echo "$MASTER_STATUS" | grep "File" | awk '{print $2}')
+  POSITION=$(echo "$MASTER_STATUS" | grep "Position" | awk '{print $2}')
+
+  docker exec -it docker-project-mysqldb${i}-1 mysql -uroot -proot -e "STOP SLAVE;"
+  docker exec -it docker-project-mysqldb${i}-1 mysql -uroot -proot -e "CHANGE MASTER TO MASTER_HOST='docker-project-mysqldb-1', MASTER_PORT=3306, MASTER_USER='replication', MASTER_PASSWORD='password';"
+  docker exec -it docker-project-mysqldb${i}-1 mysql -uroot -proot -e "START SLAVE;"
 done

@@ -25,26 +25,18 @@ public class DatabaseChecker {
 
     @PostConstruct
     public void checkIfAllTablesExists() {
-        System.out.println(databaseUrl);
 
-//        if (!databaseUrl.equals("jdbc:mysql://localhost:11111/store?user=root&createDatabaseIfNotExist=true")) {
-//            setSlave();
-//        } else {
-//            setMaster();
-//
-//
-//        }
-
-        if (!doesProductTableExist()) {
-            createProductTable();
+        if (databaseUrl.equals("jdbc:mysql://mysqldb:3306/store?user=root&password=root&allowPublicKeyRetrieval=true")) {
+            if (!doesProductTableExist()) {
+                createProductTable();
+            }
+            if (!doesOrderTableExist()) {
+                createOrderTable();
+            }
+            if (!doesOrderHasProductTableExist()) {
+                createOrderHasProductTable();
+            }
         }
-        if (!doesOrderTableExist()) {
-            createOrderTable();
-        }
-        if (!doesOrderHasProductTableExist()) {
-            createOrderHasProductTable();
-        }
-
 
     }
 
