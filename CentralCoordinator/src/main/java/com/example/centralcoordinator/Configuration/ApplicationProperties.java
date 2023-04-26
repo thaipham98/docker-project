@@ -1,4 +1,4 @@
-package Configuration;
+package com.example.centralcoordinator.Configuration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

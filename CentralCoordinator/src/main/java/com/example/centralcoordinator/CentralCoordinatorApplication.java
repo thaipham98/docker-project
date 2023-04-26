@@ -1,6 +1,6 @@
 package com.example.centralcoordinator;
 
-import Configuration.ApplicationProperties;
+import com.example.centralcoordinator.Configuration.ApplicationProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

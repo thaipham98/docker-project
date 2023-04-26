@@ -1,13 +1,12 @@
 package com.example.centralcoordinator.Controller;
 
-import Configuration.ApplicationProperties;
+import com.example.centralcoordinator.Configuration.ApplicationProperties;
 import com.example.centralcoordinator.Resource.MyLogger;
 import com.example.centralcoordinator.model.ForwardRequestRepr;
 import com.example.centralcoordinator.model.PaxosResponse;
 import com.example.centralcoordinator.model.Promise;
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
