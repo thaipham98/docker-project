@@ -50,7 +50,7 @@ public class PaxosHandler {
         this.numTrials = 0;
     }
 
-    public ResponseEntity<String> handleRequest(HttpServletRequest request, String requestBody) {
+    public synchronized ResponseEntity<String> handleRequest(HttpServletRequest request, String requestBody) {
         System.out.print("Paxos handler: send to ports: " + this.nodePorts);
 //        this.nodePorts.forEach(System.out::print);
         try {
