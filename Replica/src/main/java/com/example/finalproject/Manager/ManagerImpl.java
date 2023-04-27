@@ -123,7 +123,7 @@ public class ManagerImpl implements Manager {
     @Transactional
     // Remove button
     public List<OrderHasProduct> removeFromOrder(int productId, int quantity) {
-        / Deal with Order table
+        // Deal with Order table
         StoreOrder currentStoreOrder = storeOrderModel.findAll().stream().filter(storeOrder -> !storeOrder.isIs_completed()).findFirst().orElse(null);
         if (currentStoreOrder != null) {
             Product editProduct = productModel.findById(productId).orElse(null);
