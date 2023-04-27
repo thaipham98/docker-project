@@ -61,7 +61,7 @@ public class PaxosHandler {
 
             // if get request, call from master db immmediately
             if (request.getMethod().equals("GET")) {
-                ForwardRequestRepr forwardRequest = new ForwardRequestRepr(request, requestBody)
+                ForwardRequestRepr forwardRequest = new ForwardRequestRepr(request, requestBody);
                 ResponseEntity<String> response = consensusReached(forwardRequest);
                 return response;
             }
