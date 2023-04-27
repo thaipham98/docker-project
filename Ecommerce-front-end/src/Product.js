@@ -1,8 +1,10 @@
 import React from "react";
-import { Card, Collapse, Button } from "antd";
+import { Card, Button } from "antd";
 import useAddToCart from "./hooks/useAddToCart";
 
 const { Meta } = Card;
+
+// This component is used to show each product.
 function Product({ id, name, detail, price }) {
   const { mutate } = useAddToCart();
 

@@ -3,6 +3,7 @@ import { Row, Spin } from "antd";
 import Product from "./Product";
 import useViewAllProducts from "./hooks/useViewAllProducts";
 
+// This component is used to show all products.
 function Home() {
   const { data, isLoading } = useViewAllProducts();
   if (isLoading) {

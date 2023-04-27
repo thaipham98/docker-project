@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { API_URL } from "./const";
 
+// This hook is used to edit the cart.
 export default function useEditOrder(handleSuccess = () => {}) {
   return useMutation(
     async ({ productId, quantity }) => {

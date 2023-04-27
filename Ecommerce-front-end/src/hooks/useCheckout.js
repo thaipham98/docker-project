@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { API_URL } from "./const";
 
+// This hook is used to checkout.
 export default function useCheckout(handleSuccess = () => {}) {
   return useMutation(
     async () => {

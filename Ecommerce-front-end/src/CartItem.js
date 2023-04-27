@@ -1,17 +1,14 @@
 import React, {useEffect} from "react";
 import { Card, Row, Button } from "antd";
-import useUpdateCart from "./hooks/useUpdateCart";
-//import useCart from "./hooks/useCart";
 import useShowOrder from "./hooks/useShowOrder";
 import useAddToOrder from "./hooks/useAddToOrder";
 import useDeleteFromOrder from "./hooks/useDeleteFromOrder";
 import useSearchProduct from "./hooks/useSearchProduct";
 import useRemoveFromOrder from "./hooks/useRemoveFromOrder";
 
-function CartItem({ id, totalPrice, quantity, setTotalPrice }) {
-//  const { refetch } = useCart();
+// This component is used to show each item in the cart.
+function CartItem({ id, quantity, setTotalPrice }) {
   const { refetch } = useShowOrder();
-  const { mutate } = useUpdateCart(refetch);
   const {mutate: add} = useAddToOrder(refetch);
   const {mutate: subtract} = useDeleteFromOrder(refetch);
   const {mutate: remove} = useRemoveFromOrder(refetch);

@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { API_URL } from "./const";
 
+// This hook is used to clear the cart.
 export default function useClearCart(handleSuccess = () => {}) {
   return useMutation(
     async () => {

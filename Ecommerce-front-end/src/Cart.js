@@ -1,17 +1,17 @@
-import React, { useEffect, useState, createContext, useContext } from "react";
+import React, { useEffect, useState, createContext } from "react";
 import { Button, Spin, Statistic } from "antd";
 import CartItem from "./CartItem";
-import useCart from "./hooks/useCart";
 import useCheckout from "./hooks/useCheckout";
 import useClearCart from "./hooks/useClearCart";
 import useShowOrder from "./hooks/useShowOrder";
 
+
 const TotalPriceContext = createContext(null);
 
+// This component is used to show the cart.
 function Cart() {
   const [totalPrice, setTotalPrice] = useState({});
   const [successPurchase, setSuccessPurchase] = useState(false);
-  //const { data, isLoading, isRefetching, refetch, remove } = useCart();
   const { data, isLoading, isRefetching, refetch, remove } = useShowOrder();
   const { mutate: checkout } = useCheckout(() => {
     refetch();
