@@ -39,7 +39,7 @@ public class HealthCheckConsumer {
         System.out.println("Received health check payload: " + payload);
     }
 
-    @Scheduled(fixedRate = 10000) // Check every 10 seconds
+    @Scheduled(fixedRate = 5000) // Check every 5 seconds
     public void checkForMissedMessages() {
         Duration timeoutThreshold = Duration.ofSeconds(10); // Set the desired timeout threshold
 

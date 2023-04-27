@@ -8,6 +8,7 @@ import com.example.centralcoordinator.model.Promise;
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -15,6 +16,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +25,10 @@ import java.util.stream.Collectors;
 public class PaxosHandler {
     private List<Integer> nodePorts;
     private List<String> nodeHostnames;
+    @Value("${appconfig.masterNodePort}")
+    private int masterPort;
+    @Value("${appconfig.masterNodeHostName}")
+    private String masterHostname;
     private int port;
     private String hostname;
     private Long currentProposal;
@@ -58,9 +64,9 @@ public class PaxosHandler {
             boolean isPrepared = sendPrepare(currentProposal);
 
             if (!isPrepared) {
-//            numTrials++;
-//            return handleRequest(request, requestBody);
-                return ResponseEntity.status(500).body("The majority of server replicas are not prepared");
+                numTrials++;
+                return handleRequest(request, requestBody);
+//                return ResponseEntity.status(500).body("The majority of server replicas are not prepared");
             }
 
             if (this.mockCurrentValue == null) {
@@ -97,11 +103,11 @@ public class PaxosHandler {
         myLogger.info("==== From paxos handler: consensusReached mockCurrentValue:" + mockCurrentValue);
 
         // temporarily add backup node to nodePort and locahost
-        Integer backupNodePort = 9999;
-        String backupHostName = "localhost";
-        List<Integer> nodePortsWithBackup = nodePorts.stream().collect(Collectors.toList());
+        Integer backupNodePort = this.masterPort;
+        String backupHostName = this.masterHostname;
+        List<Integer> nodePortsWithBackup = new ArrayList<>(); //nodePorts.stream().collect(Collectors.toList());
         nodePortsWithBackup.add(backupNodePort);
-        List<String> hostnamesWithBackup = nodeHostnames.stream().collect(Collectors.toList());
+        List<String> hostnamesWithBackup = new ArrayList<>(); //nodeHostnames.stream().collect(Collectors.toList());
         hostnamesWithBackup.add(backupHostName);
         System.out.println("Send request to all servers: nodesWithBackup = " + nodePortsWithBackup);
 
@@ -114,6 +120,7 @@ public class PaxosHandler {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
+        System.out.println(">>>>>> Sending to master at: " +backupHostName + ":" + backupNodePort + " <<<<<");
         for (int i = 0; i < nodePortsWithBackup.size(); i++) {
             //send request to each node via HTTP
             String base_url = "http://" + hostnamesWithBackup.get(i) + ":" + nodePortsWithBackup.get(i);
