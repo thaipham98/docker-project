@@ -23,14 +23,9 @@ public class MainController {
 
     private ManagerImpl manager;
 
-    @GetMapping("/")
-    public String index() {
-        return "Đây là Hà Nội của tao";
-    }
-
     @GetMapping("/viewAllProduct")
     /**
-     * viewAll
+     * viewAllProduct
      */
     public ResponseEntity<Object> viewAll() {
         System.out.println("viewAll controller called");
@@ -45,7 +40,7 @@ public class MainController {
 
     @GetMapping("/viewProduct/{id}")
     /**
-     * view
+     * viewProduct
      */
     public ResponseEntity<Object> view(@PathVariable String id) {
         System.out.println("view controller called with id: " + id);
