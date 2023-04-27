@@ -18,3 +18,9 @@ chmod +x chmod +x init_replication.sh check_mysql.sh
 Test-> go to browser localhost:3000
 
 To turn off all services: docker compose down 
+
+To stop a container: docker stop <container_id or name> 
+
+To restart, find the container id or name with: docker ps -a 
+
+Then: docker start <container_id or name> 
