@@ -9,6 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+/**
+ * ManagerImpl
+ */
 public class ManagerImpl implements Manager {
 
     @Autowired

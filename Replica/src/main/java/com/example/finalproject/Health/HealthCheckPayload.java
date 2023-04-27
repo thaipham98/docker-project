@@ -4,6 +4,10 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * This class is used to send health check messages to the central coordinator.
+ * It is used by the health check service.
+ */
 public class HealthCheckPayload {
     private String replicaId;
     private String timestamp;

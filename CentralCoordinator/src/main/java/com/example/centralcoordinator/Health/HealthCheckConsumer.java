@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
+/**
+ * This class is responsible for processing health check messages from replicas.
+ */
 public class HealthCheckConsumer {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final Map<String, Instant> replicaLastMessageReceivedAt = new HashMap<>();

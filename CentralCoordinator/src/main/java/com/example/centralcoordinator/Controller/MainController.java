@@ -16,6 +16,9 @@ import org.springframework.web.client.RestTemplate;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/**")
+/**
+ * MainController
+ */
 public class MainController {
 
     private PaxosHandler paxosHandler;

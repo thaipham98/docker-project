@@ -2,6 +2,9 @@ package com.example.centralcoordinator.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * PaxosResponse
+ */
 public class PaxosResponse {
     @JsonProperty("Status")
     private int status;

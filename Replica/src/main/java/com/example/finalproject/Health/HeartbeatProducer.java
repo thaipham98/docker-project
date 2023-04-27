@@ -17,6 +17,9 @@ import java.net.URL;
 import java.time.Instant;
 
 @Component
+/**
+ * This class is responsible for sending heartbeats to the central coordinator.
+ */
 public class HeartbeatProducer {
 
     @Autowired

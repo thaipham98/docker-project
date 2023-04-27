@@ -16,11 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
+/**
+ * PaxosController
+ */
 public class PaxosController {
 
     private PaxosManager paxosManager;
 
     @PostMapping("/prepare")
+    /**
+     * prepare
+     */
     public ResponseEntity<Object> prepare(@RequestParam Long proposalId) {
         System.out.println("Paxos Controller /prepare: Receiving proposalId: " + proposalId);
         // print out the request received:
@@ -29,6 +35,9 @@ public class PaxosController {
     }
 
     @PostMapping("/accept")
+    /**
+     * accept
+     */
     public ResponseEntity<Object> accept(@RequestParam Long proposalId, @RequestBody ForwardRequestRepr forwardRequest) {
         System.out.println("Paxos Controller /accept: Receiving forwarded request:\n");
         System.out.println(forwardRequest.toString());
@@ -38,6 +47,9 @@ public class PaxosController {
     }
 
     @PostMapping("/decide")
+    /**
+     * decide
+     */
     public ResponseEntity<Object> decide() {
         Object result = paxosManager.decide();
         return ResponseHandler.generateResponse("Success deciding!", HttpStatus.OK, result);

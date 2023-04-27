@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
+/**
+ * ForwardRequestRepr
+ */
 public class ForwardRequestRepr {
     String method;
     String contentType;

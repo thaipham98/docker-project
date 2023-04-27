@@ -1,5 +1,8 @@
 package com.example.centralcoordinator.Health;
 
+/**
+ * HealthCheckPayload
+ */
 public class HealthCheckPayload {
     private String replicaId;
     private String timestamp;

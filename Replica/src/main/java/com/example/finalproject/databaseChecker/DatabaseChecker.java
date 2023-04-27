@@ -16,6 +16,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
+/**
+ * This class is used to check if all the tables exist in the database.
+ * If they don't exist, it creates them.
+ */
 public class DatabaseChecker {
     @Autowired
     private DataSource dataSource;
@@ -24,6 +28,10 @@ public class DatabaseChecker {
     private String databaseUrl;
 
     @PostConstruct
+    /**
+     * This method is used to check if all the tables exist in the database.
+     * If they don't exist, it creates them.
+     */
     public void checkIfAllTablesExists() {
 
         if (databaseUrl.equals("jdbc:mysql://mysqldb:3306/store?user=root&password=root&allowPublicKeyRetrieval=true")) {
@@ -39,6 +47,7 @@ public class DatabaseChecker {
         }
 
     }
+
 
     private void setMaster() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
@@ -60,6 +69,9 @@ public class DatabaseChecker {
         jdbcTemplate.execute(sql2);
     }
 
+    /**
+     * This method is used to create the product table.
+     */
     private boolean doesProductTableExist() {
         Pattern pattern = Pattern.compile(".*\\/([^\\?]+)\\?.*");
         Matcher matcher = pattern.matcher(databaseUrl);
@@ -73,6 +85,9 @@ public class DatabaseChecker {
         return result;
     }
 
+    /**
+     * This method is used to check the order table exists.
+     */
     private boolean doesOrderTableExist () {
         Pattern pattern = Pattern.compile(".*\\/([^\\?]+)\\?.*");
         Matcher matcher = pattern.matcher(databaseUrl);
@@ -84,6 +99,9 @@ public class DatabaseChecker {
         return result;
     }
 
+    /**
+     * This method is used to check the order_has_product table exists.
+     */
     private boolean doesOrderHasProductTableExist () {
         Pattern pattern = Pattern.compile(".*\\/([^\\?]+)\\?.*");
         Matcher matcher = pattern.matcher(databaseUrl);
@@ -95,6 +113,9 @@ public class DatabaseChecker {
         return result;
     }
 
+    /**
+     * This method is used to create the product table.
+     */
     private void createProductTable() {
         try (Connection connection = DriverManager.getConnection(databaseUrl)) {
             Pattern pattern = Pattern.compile(".*\\/([^\\?]+)\\?.*");
@@ -118,6 +139,9 @@ public class DatabaseChecker {
         }
     }
 
+    /**
+     * This method is used to create the order table.
+     */
     private void createOrderTable() {
         try (Connection connection = DriverManager.getConnection(databaseUrl)) {
             Pattern pattern = Pattern.compile(".*\\/([^\\?]+)\\?.*");
@@ -136,6 +160,9 @@ public class DatabaseChecker {
         }
     }
 
+    /**
+     * This method is used to create the order_has_product table.
+     */
     private void createOrderHasProductTable() {
         try (Connection connection = DriverManager.getConnection(databaseUrl)) {
             Pattern pattern = Pattern.compile(".*\\/([^\\?]+)\\?.*");

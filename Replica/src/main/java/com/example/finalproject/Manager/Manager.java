@@ -6,6 +6,9 @@ import com.example.finalproject.Model.Product;
 
 import java.util.List;
 
+/**
+ * Manager
+ */
 public interface Manager {
     List<Product> viewAllProducts();
 

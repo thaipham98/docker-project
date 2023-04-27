@@ -22,6 +22,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+/**
+ * This class handles the paxos protocol for the central coordinator
+ */
 public class PaxosHandler {
     private List<Integer> nodePorts;
     private List<String> nodeHostnames;

@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Objects;
-
+/**
+ * ForwardRequestRepr
+ */
 public class ForwardRequestRepr {
     @JsonProperty("method")
     String method;

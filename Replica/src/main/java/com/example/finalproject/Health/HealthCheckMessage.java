@@ -1,5 +1,8 @@
 package com.example.finalproject.Health;
-
+/**
+ * This class is used to send health check messages to the central coordinator.
+ * It is used by the health check service.
+ */
 public class HealthCheckMessage {
     private String replicaId;
     private double cpuUsage;

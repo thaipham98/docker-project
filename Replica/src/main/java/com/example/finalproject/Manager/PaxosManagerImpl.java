@@ -7,6 +7,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 @Service
+/**
+ * PaxosManagerImpl
+ */
 public class PaxosManagerImpl implements PaxosManager{
 
     private ForwardRequestRepr acceptedValue = null;
@@ -15,6 +18,9 @@ public class PaxosManagerImpl implements PaxosManager{
     private MyLogger myLogger = MyLogger.getInstance();
 
     @Override
+    /**
+     * prepare
+     */
     public Promise prepare(Long currentProposal) {
         myLogger.info("PAxos before prepare: Current proposal: " + currentProposal);
         if (currentProposal < this.acceptedProposal) {
@@ -36,6 +42,9 @@ public class PaxosManagerImpl implements PaxosManager{
     }
 
     @Override
+    /**
+     * accept
+     */
     public Promise accept(Long currentProposal, ForwardRequestRepr request) {
         myLogger.info("Paxos accept: Current proposal: " + currentProposal + " Accepted proposal: " + this.acceptedProposal);
         if (currentProposal.equals(this.acceptedProposal)) {

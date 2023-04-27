@@ -13,8 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+
 @RestController
 @AllArgsConstructor
+/**
+ * MainController
+ */
 public class MainController {
 
     private ManagerImpl manager;
@@ -25,7 +29,9 @@ public class MainController {
     }
 
     @GetMapping("/viewAllProduct")
-//    public List<Product> viewAll() {
+    /**
+     * viewAll
+     */
     public ResponseEntity<Object> viewAll() {
         System.out.println("viewAll controller called");
         try {
@@ -36,7 +42,11 @@ public class MainController {
         }
     }
 
+
     @GetMapping("/viewProduct/{id}")
+    /**
+     * view
+     */
     public ResponseEntity<Object> view(@PathVariable String id) {
         System.out.println("view controller called with id: " + id);
         try {
@@ -48,7 +58,11 @@ public class MainController {
         }
     }
 
+
     @PostMapping("/addToOrder")
+    /**
+     * addToOrder
+     */
     public ResponseEntity<Object> addToOrder(@RequestBody Map<String, Integer> body) {
         System.out.println("addToOrder controller called with body: ");
         body.forEach((key, value) -> System.out.println(key + ":" + value));
@@ -62,6 +76,9 @@ public class MainController {
     }
 
     @PutMapping("/deleteFromOrder")
+    /**
+     * deleteFromOrder
+     */
     public ResponseEntity<Object> deleteFromOrder(@RequestBody Map<String, Integer> body) {
         try {
             int productId = body.get("productId");
@@ -73,6 +90,9 @@ public class MainController {
     }
 
     @GetMapping("/showOrder")
+    /**
+     * showOrder
+     */
     public ResponseEntity<Object> showOrder() {
         try {
             List<OrderHasProduct> result = manager.showOrder();
@@ -83,16 +103,25 @@ public class MainController {
     }
 
     @PutMapping("/checkout")
+    /**
+     * checkout
+     */
     public void checkout() {
         manager.checkout();
     }
 
     @PutMapping("/clearOrder")
+    /**
+     * clearOrder
+     */
     public void clearOrder() {
         manager.clearOrder();
     }
 
     @PutMapping("/removeFromOrder")
+    /**
+     * removeFromOrder
+     */
     public ResponseEntity<Object> editOrder(@RequestBody Map<String, Integer> body) {
         try {
             int productId = body.get("productId");
