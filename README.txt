@@ -12,7 +12,7 @@ Wait for 5 mins ...
 
 Replicate database:
 
-chmod +x chmod +x init_replication.sh check_mysql.sh
+chmod +x init_replication.sh check_mysql.sh
 ./init_replication.sh
 
 Test-> go to browser localhost:3000
