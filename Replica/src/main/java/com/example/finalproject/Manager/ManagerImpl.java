@@ -129,8 +129,6 @@ public class ManagerImpl implements Manager {
             Product editProduct = productModel.findById(productId).orElse(null);
             if (editProduct != null) {
                 int price = editProduct.getPrice();
-                //currentStoreOrder.setTotal_price(currentStoreOrder.getTotal_price() - price * quantity);
-
             }
             storeOrderModel.save(currentStoreOrder);
 
