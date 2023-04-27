@@ -1,21 +1,39 @@
-Build react image: docker build -t react ./Ecommerce-front-end
-Build central image: docker build -t central-coordinator .
-Build replica image: docker build -t replica ./Replica
+This is the manual of how to run the system hosted by containers
 
-Create docker network: docker network create appnetwork
+Build react image for frontend:
+docker build -t react ./Ecommerce-front-end
 
+Build central image for central coordinator:
+docker build -t central-coordinator .
+
+Buld replica image for backend server:
+docker build -t replica ./Replica
+
+Create docker network that contains all the containers
+docker network create appnetwork
+
+Stop all the containers:
 docker compose down
+
+Build the docker-compose.yml
 docker compose build
+
+Start all the containers/services
 docker compose up -d 
 
-Wait for 5 mins ... 
+This takes a while as there are many resources running. Please wait for 5 mins ...
+Check if the container is up by:
+docker ps
+docker logs <container-name> 
 
-Replicate database:
+After all the containers starts, initiate database for slave-replicas and master-replica to make data from slave-replicas replicated from master-replica 
 
-chmod +x init_replication.sh check_mysql.sh
+chmod +x chmod +x init_replication.sh check_mysql.sh
+
 ./init_replication.sh
 
-Test-> go to browser localhost:3000
+Test-> go to browser localhost:3000, which hosts the react app
+
 
 To turn off all services: docker compose down 
 
