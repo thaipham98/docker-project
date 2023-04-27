@@ -61,7 +61,8 @@ public class PaxosHandler {
 
             // if get request, call from master db immmediately
             if (request.getMethod().equals("GET")) {
-                ResponseEntity<String> response = consensusReached(this.mockCurrentValue);
+                ForwardRequestRepr forwardRequest = new ForwardRequestRepr(request, requestBody)
+                ResponseEntity<String> response = consensusReached(forwardRequest);
                 return response;
             }
 
