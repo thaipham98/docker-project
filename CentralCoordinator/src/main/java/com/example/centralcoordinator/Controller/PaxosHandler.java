@@ -59,10 +59,15 @@ public class PaxosHandler {
                 return ResponseEntity.status(500).body("Server Error");
             }
 
-            //TODO set to timestamp
+            // if get request, call from master db immmediately
+            if (request.getMethod().equals("GET")) {
+                ResponseEntity<String> response = consensusReached(this.mockCurrentValue);
+                return response;
+            }
+
+            // write request, do Paxos
             String currentProposalString = new SimpleDateFormat("MMddHHmmssSSS").format(new Date());
             currentProposal = Long.parseLong(currentProposalString);
-
 
             boolean isPrepared = sendPrepare(currentProposal);
 
