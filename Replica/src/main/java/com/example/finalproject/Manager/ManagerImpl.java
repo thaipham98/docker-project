@@ -123,19 +123,16 @@ public class ManagerImpl implements Manager {
     @Transactional
     // Remove button
     public List<OrderHasProduct> removeFromOrder(int productId, int quantity) {
-        // Deal with Order table
+        / Deal with Order table
         StoreOrder currentStoreOrder = storeOrderModel.findAll().stream().filter(storeOrder -> !storeOrder.isIs_completed()).findFirst().orElse(null);
         if (currentStoreOrder != null) {
             Product editProduct = productModel.findById(productId).orElse(null);
             if (editProduct != null) {
                 int price = editProduct.getPrice();
-                currentStoreOrder.setTotal_price(currentStoreOrder.getTotal_price() - price * quantity);
-                if (currentStoreOrder.getTotal_price() == 0){
-                    storeOrderModel.delete(currentStoreOrder);
-                } else {
-                    storeOrderModel.save(currentStoreOrder);
-                }
+                //currentStoreOrder.setTotal_price(currentStoreOrder.getTotal_price() - price * quantity);
+
             }
+            storeOrderModel.save(currentStoreOrder);
 
             // Deal with OrderHasProduct table
             int oid = currentStoreOrder.getOid();
@@ -145,16 +142,13 @@ public class ManagerImpl implements Manager {
                 if (orderHasProduct.getProduct_count() == 0) {
                     orderHasProductModel.delete(orderHasProduct);
                 } else {
+
                     orderHasProductModel.save(orderHasProduct);
                 }
             }
         }
-        currentStoreOrder = storeOrderModel.findAll().stream().filter(storeOrder -> !storeOrder.isIs_completed()).findFirst().orElse(null);
-        if (currentStoreOrder != null) {
-            int oid = currentStoreOrder.getOid();
-            return orderHasProductModel.findAll().stream().filter(ohp -> ohp.getOid() == oid).toList();
-        }
-        return null;
+        int oid = currentStoreOrder.getOid();
+        return orderHasProductModel.findAll().stream().filter(ohp -> ohp.getOid() == oid).toList();
     }
 
     @Override
