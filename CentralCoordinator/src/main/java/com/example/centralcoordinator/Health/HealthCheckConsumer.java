@@ -30,7 +30,7 @@ public class HealthCheckConsumer {
         }
     }
 
-    @KafkaListener(topics = "#{T(java.util.Arrays).asList('${healthcheck.topics}'.split(','))}", groupId = "central_coordinator")
+    @KafkaListener(topics = "#{T(java.util.Arrays).asList('${healthcheck.topics}'.split(','))}", groupId = "central-coordinator-group")
     public void processHealthCheckMessage(HealthCheckPayload payload) {
         //HealthCheckPayload payload = objectMapper.readValue(jsonPayload, HealthCheckPayload.class);
         String replicaId = payload.getReplicaId();
