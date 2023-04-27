@@ -28,7 +28,7 @@ docker logs <container-name>
 
 After all the containers starts, initiate database for slave-replicas and master-replica to make data from slave-replicas replicated from master-replica 
 
-chmod +x chmod +x init_replication.sh check_mysql.sh
+chmod +x init_replication.sh check_mysql.sh
 
 ./init_replication.sh
 
