@@ -5,16 +5,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 
+/**
+ * OrderHasProduct is used to represent the order_has_product table in the database.
+ */
 @Entity
 @IdClass(OrderHasProductId.class)
 public class OrderHasProduct {
-
-//    CREATE TABLE orderhasproduct (
-//    oid varchar(100) NOT NULL REFERENCES _order (oid),
-//    pid varchar(100) NOT NULL REFERENCES product (pid),
-//    product_count int NOT NULL,
-//    CONSTRAINT PK_orderhasproduct PRIMARY KEY (oid, pid)
-//);
 
     @Id
     private int oid;

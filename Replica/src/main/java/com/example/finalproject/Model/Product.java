@@ -3,6 +3,9 @@ package com.example.finalproject.Model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
+/**
+ * Product is used to represent the product table in the database.
+ */
 @Entity
 public class Product {
 

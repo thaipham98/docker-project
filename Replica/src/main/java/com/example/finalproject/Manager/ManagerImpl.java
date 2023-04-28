@@ -7,10 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Service
 /**
- * ManagerImpl
+ * ManagerImpl implements Manager
  */
 public class ManagerImpl implements Manager {
 
@@ -32,6 +34,7 @@ public class ManagerImpl implements Manager {
     public Product findProductById(int productId) {
         return productModel.findById(productId).orElse(null);
     }
+    private static final Logger logger = LogManager.getLogger(ManagerImpl.class);
 
     @Override
     @Transactional
@@ -41,7 +44,7 @@ public class ManagerImpl implements Manager {
         try {
             currentStoreOrder = storeOrderModel.findAll().stream().filter(storeOrder -> !storeOrder.isIs_completed()).findFirst().orElse(null);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.error(e.getMessage());
         }
         if (currentStoreOrder == null) {
             currentStoreOrder = new StoreOrder();
@@ -62,7 +65,7 @@ public class ManagerImpl implements Manager {
         try {
             orderHasProduct = orderHasProductModel.findAll().stream().filter(ohp -> ohp.getOid() == oid && ohp.getPid() == productId).findFirst().orElse(null);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.error(e.getMessage());
         }
 
         if (addedProduct != null) {

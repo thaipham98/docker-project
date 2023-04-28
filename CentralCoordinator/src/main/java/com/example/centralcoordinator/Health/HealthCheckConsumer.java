@@ -12,6 +12,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Component
 /**
@@ -20,6 +22,7 @@ import java.util.Map;
 public class HealthCheckConsumer {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final Map<String, Instant> replicaLastMessageReceivedAt = new HashMap<>();
+    private static final Logger logger = LogManager.getLogger(HealthCheckConsumer.class);
 
 
     @Value("${healthcheck.replicas}")
@@ -28,7 +31,7 @@ public class HealthCheckConsumer {
     @PostConstruct
     private void initReplicaLastMessageReceivedAt() {
         for (String replicaId : replicas) {
-            System.out.println(replicaId);
+            logger.info(replicaId);
             replicaLastMessageReceivedAt.put(replicaId, null);
         }
     }
@@ -39,7 +42,7 @@ public class HealthCheckConsumer {
         String replicaId = payload.getReplicaId();
         replicaLastMessageReceivedAt.put(replicaId, Instant.now());
         // Process the health check payload, e.g., update replica status, trigger alerts, etc.
-        System.out.println("Received health check payload: " + payload);
+        logger.info("Received health check payload: " + payload);
     }
 
     @Scheduled(fixedRate = 5000) // Check every 5 seconds
@@ -51,14 +54,14 @@ public class HealthCheckConsumer {
             Instant lastMessageReceivedAt = entry.getValue();
 
             if (lastMessageReceivedAt == null) {
-                System.out.println(replicaId + " is down");
+                logger.info(replicaId + " is down");
                 continue;
             }
 
             Duration timeSinceLastMessage = Duration.between(lastMessageReceivedAt, Instant.now());
 
             if (timeSinceLastMessage.compareTo(timeoutThreshold) > 0) {
-                System.out.println("ALERT: No health check message received from replica " + replicaId + " in the last " + timeSinceLastMessage.getSeconds() + " seconds.");
+                logger.info("ALERT: No health check message received from replica " + replicaId + " in the last " + timeSinceLastMessage.getSeconds() + " seconds.");
             }
         }
     }

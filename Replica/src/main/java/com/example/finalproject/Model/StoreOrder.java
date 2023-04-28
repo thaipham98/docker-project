@@ -2,6 +2,9 @@ package com.example.finalproject.Model;
 
 import jakarta.persistence.*;
 
+/**
+ * StoreOrder is used to represent the store_order table in the database.
+ */
 @Entity
 public class StoreOrder {
 

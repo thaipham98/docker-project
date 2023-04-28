@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 @RestController
@@ -22,13 +24,14 @@ import java.util.Map;
 public class MainController {
 
     private ManagerImpl manager;
+    private static final Logger logger = LogManager.getLogger(MainController.class);
 
     @GetMapping("/viewAllProduct")
     /**
      * viewAllProduct
      */
     public ResponseEntity<Object> viewAll() {
-        System.out.println("viewAll controller called");
+        logger.info("viewAll controller called");
         try {
             List<Product> result = manager.viewAllProducts();
             return ResponseHandler.generateResponse("Success viewing all products!", HttpStatus.OK, result);
@@ -43,7 +46,7 @@ public class MainController {
      * viewProduct
      */
     public ResponseEntity<Object> view(@PathVariable String id) {
-        System.out.println("view controller called with id: " + id);
+        logger.info("view controller called with id: " + id);
         try {
             int productId = Integer.parseInt(id);
             Product result = manager.findProductById(productId);
@@ -59,8 +62,8 @@ public class MainController {
      * addToOrder
      */
     public ResponseEntity<Object> addToOrder(@RequestBody Map<String, Integer> body) {
-        System.out.println("addToOrder controller called with body: ");
-        body.forEach((key, value) -> System.out.println(key + ":" + value));
+        logger.info("addToOrder controller called with body: ");
+        body.forEach((key, value) -> logger.info(key + ":" + value));
         try {
             int productId = body.get("productId");
             List<OrderHasProduct> result = manager.addToOrder(productId);

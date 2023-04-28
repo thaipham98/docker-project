@@ -4,7 +4,7 @@ import com.example.finalproject.Model.ForwardRequestRepr;
 import com.example.finalproject.Model.Promise;
 import jakarta.servlet.http.HttpServletRequest;
 /**
- * PaxosManager
+ * PaxosManager to handle the business logic of the Paxos algorithm.
  */
 public interface PaxosManager {
 

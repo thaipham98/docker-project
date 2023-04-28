@@ -2,6 +2,8 @@ package com.example.finalproject.Health;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -28,7 +30,7 @@ public class HeartbeatProducer {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
     private final MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
-
+    private static final Logger logger = LogManager.getLogger(HeartbeatProducer.class);
 
     @Value("${replica.id}")
     private String replicaId;
@@ -61,10 +63,10 @@ public class HeartbeatProducer {
 
         try {
             String jsonPayload = objectMapper.writeValueAsString(payload);
-            System.out.println("Sending heartbeat: " + jsonPayload);
+            logger.info("Sending heartbeat: " + jsonPayload);
             kafkaTemplate.send(healthCheckTopic, jsonPayload);
         } catch (JsonProcessingException e) {
-            System.err.println("Failed to serialize health check payload: " + e.getMessage());
+            logger.error("Failed to serialize health check payload: " + e.getMessage());
         }
 
     }
@@ -85,7 +87,7 @@ public class HeartbeatProducer {
                 responseTime = (end - start) / 1000.0;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to measure response time: " + e.getMessage());
         }
         return responseTime;
     }

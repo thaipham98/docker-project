@@ -2,6 +2,9 @@ package com.example.finalproject.Model;
 
 import java.io.Serializable;
 
+/**
+ * OrderHasProductId is used to represent the composite key of the OrderHasProduct class.
+ */
 public class OrderHasProductId implements Serializable {
     private Integer oid;
     private Integer pid;

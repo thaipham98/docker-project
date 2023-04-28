@@ -14,6 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Component
 /**
@@ -26,6 +28,8 @@ public class DatabaseChecker {
 
     @Value("${spring.datasource.url}")
     private String databaseUrl;
+    private static final Logger logger = LogManager.getLogger(DatabaseChecker.class);
+
 
     @PostConstruct
     /**
@@ -80,8 +84,8 @@ public class DatabaseChecker {
         jdbcTemplate.execute("USE " + databaseName);
         String sql = "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = ? AND table_name = 'product')";
         boolean result = jdbcTemplate.queryForObject(sql, Boolean.class, databaseName);
-        System.out.println(result);
-        System.out.println(databaseUrl);
+        logger.info(result);
+        logger.info(databaseUrl);
         return result;
     }
 
@@ -96,6 +100,8 @@ public class DatabaseChecker {
         jdbcTemplate.execute("USE " + databaseName);
         String sql = "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = ? AND table_name = 'store_order')";
         boolean result = jdbcTemplate.queryForObject(sql, Boolean.class, databaseName);
+        logger.info(result);
+        logger.info(databaseUrl);
         return result;
     }
 
@@ -110,6 +116,8 @@ public class DatabaseChecker {
         jdbcTemplate.execute("USE " + databaseName);
         String sql = "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = ? AND table_name = 'order_has_product')";
         boolean result = jdbcTemplate.queryForObject(sql, Boolean.class, databaseName);
+        logger.info(result);
+        logger.info(databaseUrl);
         return result;
     }
 

@@ -2,6 +2,9 @@ package com.example.finalproject.Model;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * This class is used to represent the body of the Paxos response to the Paxos handler.
+ */
 public class Promise {
 
     private Long acceptedProposal;

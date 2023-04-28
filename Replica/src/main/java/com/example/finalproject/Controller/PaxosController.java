@@ -13,22 +13,26 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @RestController
 @AllArgsConstructor
 /**
- * PaxosController
+ * PaxosController class
+ * This class is used to send response to Paxos requests from the proposer before committing the request.
  */
 public class PaxosController {
 
     private PaxosManager paxosManager;
+    private static final Logger logger = LogManager.getLogger(PaxosController.class);
 
     @PostMapping("/prepare")
     /**
      * prepare
      */
     public ResponseEntity<Object> prepare(@RequestParam Long proposalId) {
-        System.out.println("Paxos Controller /prepare: Receiving proposalId: " + proposalId);
+        logger.info("Paxos Controller /prepare: Receiving proposalId: " + proposalId);
         // print out the request received:
         Object result = paxosManager.prepare(proposalId);
         return ResponseHandler.generateResponse("Success preparing!", HttpStatus.OK, result);
@@ -39,10 +43,10 @@ public class PaxosController {
      * accept
      */
     public ResponseEntity<Object> accept(@RequestParam Long proposalId, @RequestBody ForwardRequestRepr forwardRequest) {
-        System.out.println("Paxos Controller /accept: Receiving forwarded request:\n");
-        System.out.println(forwardRequest.toString());
+        logger.info("Paxos Controller /accept: Receiving forwarded request:\n");
+        logger.info(forwardRequest.toString());
         Object result = paxosManager.accept(proposalId, forwardRequest);
-        System.out.println("Paxos Controller /accept: Sending back response with Data (Promise):" + ((Promise)result));
+        logger.info("Paxos Controller /accept: Sending back response with Data (Promise):" + ((Promise)result));
         return ResponseHandler.generateResponse("Success accepting!", HttpStatus.OK, result);
     }
 
@@ -78,7 +82,7 @@ public class PaxosController {
         if (pathInfo != null) {
             responseBuilder.append("Path info: " + pathInfo + "\n");
         }
-        System.out.println(responseBuilder.toString());
+        logger.info(responseBuilder.toString());
     }
 
 

@@ -3,7 +3,7 @@ package com.example.centralcoordinator.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * PaxosResponse
+ * PaxosResponse: This class is used to represent the Paxos response that is sent by the replica.
  */
 public class PaxosResponse {
     @JsonProperty("Status")

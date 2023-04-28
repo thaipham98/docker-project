@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Service
 /**
@@ -38,7 +40,8 @@ public class PaxosHandler {
     private ForwardRequestRepr mockCurrentValue; // current request to send with body for paxos
     private int numTrials;
     // fo rlogging events
-    private MyLogger myLogger = MyLogger.getInstance();
+    private static final Logger myLogger = LogManager.getLogger(PaxosHandler.class);
+
 
     public PaxosHandler(ApplicationProperties props) {
         this.nodePorts = props.getNodePorts();
@@ -50,16 +53,24 @@ public class PaxosHandler {
         this.numTrials = 0;
     }
 
+    /**
+     * This method implements Paxos protocol with all the nodes in the cluster
+     * Acceptors are the slove nodes in the cluster
+     * Learners are the master node
+     * @param request: Incoming request from the client
+     * @param requestBody: Body of the incoming request
+     * @return ResponseEntity<String>: Response to be sent back to the client
+     */
     public synchronized ResponseEntity<String> handleRequest(HttpServletRequest request, String requestBody) {
-        System.out.print("Paxos handler: send to ports: " + this.nodePorts);
-//        this.nodePorts.forEach(System.out::print);
+        myLogger.info("Paxos handler: send to ports: " + this.nodePorts);
         try {
             if (numTrials > 3) {
                 numTrials = 0;
-                return ResponseEntity.status(500).body("Server Error");
+                return ResponseEntity.status(500).body("Server Error. Max number of trials reached for Paxos. " +
+                        "The majority of server replicas are not prepared or accepted");
             }
 
-            // if get request, call from master db immmediately
+            // if get request, call from master db
             if (request.getMethod().equals("GET")) {
                 ForwardRequestRepr forwardRequest = new ForwardRequestRepr(request, requestBody);
                 ResponseEntity<String> response = consensusReached(forwardRequest);
@@ -106,19 +117,23 @@ public class PaxosHandler {
         }
     }
 
-
+    /**
+     * This method sends a prepare request to all the nodes in the cluster
+     * @param mockCurrentValue: Represents the incoming request from the client
+     * @return ResponseEntity<String>: Response to be sent back to the client
+     */
     public ResponseEntity<String> consensusReached(ForwardRequestRepr mockCurrentValue) {
         // print the ccurrentValue
         myLogger.info("==== From paxos handler: consensusReached mockCurrentValue:" + mockCurrentValue);
 
-        // temporarily add backup node to nodePort and locahost
+        // Add info for master node, this is the learner
         Integer backupNodePort = this.masterPort;
         String backupHostName = this.masterHostname;
         List<Integer> nodePortsWithBackup = new ArrayList<>(); //nodePorts.stream().collect(Collectors.toList());
         nodePortsWithBackup.add(backupNodePort);
         List<String> hostnamesWithBackup = new ArrayList<>(); //nodeHostnames.stream().collect(Collectors.toList());
         hostnamesWithBackup.add(backupHostName);
-        System.out.println("Send request to all servers: nodesWithBackup = " + nodePortsWithBackup);
+        myLogger.info("Send request to all servers: nodesWithBackup = " + nodePortsWithBackup);
 
         // route request to correct server controller, or server request
         ResponseEntity<String> result = null;
@@ -129,7 +144,7 @@ public class PaxosHandler {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        System.out.println(">>>>>> Sending to master at: " +backupHostName + ":" + backupNodePort + " <<<<<");
+        myLogger.info(">>>>>> Sending to master at: " +backupHostName + ":" + backupNodePort + " <<<<<");
         for (int i = 0; i < nodePortsWithBackup.size(); i++) {
             //send request to each node via HTTP
             String base_url = "http://" + hostnamesWithBackup.get(i) + ":" + nodePortsWithBackup.get(i);
@@ -155,8 +170,8 @@ public class PaxosHandler {
                         .body(e.getResponseBodyAsString());
             } catch (Exception e){
                 // any other exception, return 500 error.
-                myLogger.warning("Error sending ACTUAL request to server: " + hostnamesWithBackup.get(i) + ":" + nodePortsWithBackup.get(i) + "\n" + e.getMessage());
-                myLogger.warning(e.getMessage());
+                myLogger.error("Error sending ACTUAL request to server: " + hostnamesWithBackup.get(i) + ":" + nodePortsWithBackup.get(i) + "\n" + e.getMessage());
+                myLogger.error(e.getMessage());
                 result = ResponseEntity.status(500).body(e.getMessage());
             }
         }
@@ -166,6 +181,10 @@ public class PaxosHandler {
         return result; //ResponseEntity.status(200).body("Consensus Reached");
     }
 
+    /**
+     * Send decide request to all nodes
+     * @return
+     */
     public int sendDecide(){
         // assume once accept succeeds, decide succeeds
         // send decide to all nodes
@@ -192,6 +211,12 @@ public class PaxosHandler {
         return numDecided;
     }
 
+    /**
+     * Send propose to all nodes - phase 2 of Paxos
+     * @param currentProposal
+     * @param mockCurrentValue
+     * @return true if majority of nodes accept the proposal
+     */
     public boolean sendPropose(Long currentProposal, ForwardRequestRepr mockCurrentValue) {
         myLogger.info("sendPropose with HTTP request:\n" + mockCurrentValue);
         int numAccepted = 0;
@@ -221,8 +246,8 @@ public class PaxosHandler {
                     }
                 }
             } catch (Exception e) {
-                myLogger.warning("Error sending propose request to server: " + this.nodeHostnames.get(i) + ":" + this.nodePorts.get(i) + "\n" + e.getMessage());
-                myLogger.warning(e.getMessage());
+                myLogger.error("Error sending propose request to server: " + this.nodeHostnames.get(i) + ":" + this.nodePorts.get(i) + "\n" + e.getMessage());
+                myLogger.error(e.getMessage());
             }
         }
 
@@ -234,6 +259,11 @@ public class PaxosHandler {
         return true;
     }
 
+    /**
+     * This method sends a prepare request to all the nodes in the cluster
+     * @param currentProposal: Proposal number
+     * @return boolean: True if majority of the nodes are prepared, false otherwise
+     */
     public boolean sendPrepare(Long currentProposal) {
         int numPrepared = 0;
         ForwardRequestRepr valueToSend = null;
@@ -266,8 +296,8 @@ public class PaxosHandler {
 
             } catch (Exception e){
                 // eg. server not available
-                myLogger.warning("Exception in sendPrepare to server: " + this.nodeHostnames.get(i) + ":" + this.nodePorts.get(i));
-                myLogger.warning(e.getMessage());
+                myLogger.error("Exception in sendPrepare to server: " + this.nodeHostnames.get(i) + ":" + this.nodePorts.get(i));
+                myLogger.error(e.getMessage());
             }
 
         }
@@ -286,6 +316,11 @@ public class PaxosHandler {
     }
     // =========== Helper functions to pass request to other nodes and parse Response ===========
 
+    /**
+     * This method parses the response received from the Paxos Controller
+     * @param response: Response received from Paxos Controller from Server Replica
+     * @return: Parsed response object from Json formatted string
+     */
     private PaxosResponse parsePaxosResponse(ResponseEntity<String> response){
         // extract response value
         // print response received from paxos controller
@@ -310,12 +345,12 @@ public class PaxosHandler {
             } else {
                 //handle error response
                 // TODO: change this by sth else than null
-                myLogger.warning("Error response: " + response.getStatusCode());
+                myLogger.error("Error response: " + response.getStatusCode());
                 return null;
             }
         } catch (JacksonException e) {
             //handle error response
-            myLogger.warning("Error parsing response: " + e.getMessage());
+            myLogger.error("Error parsing response: " + e.getMessage());
             return null;
         }
 

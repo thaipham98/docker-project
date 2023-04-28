@@ -5,7 +5,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 
-// Copied from Server Promise class
+/**
+ * This class is used to represent the body of the Paxos response to the Paxos handler.
+ */
 public class Promise {
     @JsonProperty("acceptedProposal")
     private Long acceptedProposal;

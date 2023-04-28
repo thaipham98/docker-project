@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
 /**
- * ForwardRequestRepr
+ * ForwardRequestRepr is used to represent the request that is sent by the client.
  */
 public class ForwardRequestRepr {
     String method;

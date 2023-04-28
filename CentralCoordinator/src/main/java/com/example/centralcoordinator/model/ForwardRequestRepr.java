@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.Objects;
 /**
  * ForwardRequestRepr
+ * This class is used to represent the request that is sent by the client.
  */
 public class ForwardRequestRepr {
     @JsonProperty("method")
